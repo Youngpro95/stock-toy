@@ -1,5 +1,6 @@
 from selenium import webdriver
 import datetime,time
+import json
 
 now = datetime.datetime.now() #시간
 nowDate = now.strftime('%Y년 %m월 %d일 %H시 %M분 입니다.')
@@ -48,11 +49,34 @@ def check_overlap():
             # print(count)
             vi_result.remove(i) # 중복값 제거
 def setting_vi():
-    test_list =[]
+    trasnfer_dic =[]
+    result_dic ={}
+    count = 0
+    start = 1
     for i in range(len(vi_result)):
-        test = vi_result[i].split()
-        test_list.extend(test) #11개로 나뉨
-    print(test_list)
+        vi_split = vi_result[i].split()
+        trasnfer_dic.extend(vi_split) #11개로 나뉨
+        stk_id = trasnfer_dic[0 + count]
+        stk_cd = trasnfer_dic[2 + count]
+        stk_nm = trasnfer_dic[3 + count]
+        stk_pri = trasnfer_dic[6 + count]
+        stk_inc = trasnfer_dic[7 + count]
+        stk_act = trasnfer_dic[9 + count]
+        stk_rel = trasnfer_dic[10 + count]
+        # result_dic['stk_id'] = trasnfer_dic[0+count] #번호
+        # result_dic['stk_cd'] = trasnfer_dic[2+count] #종목코드
+        # result_dic['stk_nm'] = trasnfer_dic[3+count] #종목이름
+        # result_dic['stk_pri'] = trasnfer_dic[6+count] #종목 기준가격
+        # result_dic['stk_inc'] =  trasnfer_dic[7+count] #상승률
+        # result_dic['stk_act'] = trasnfer_dic[9+count] #기준시각
+        # result_dic['stk_rel'] = trasnfer_dic[10+count] #해제시각
+        result_dic[start] = {'stk_id':stk_id, 'stk_cd':stk_cd, 'stk_nm':stk_nm, 'stk_pri':stk_pri, 'stk_inc':stk_inc, 'stk_act':stk_act, 'stk_rel':stk_rel}
+        count += 11
+        start += 1
+        with open('vi_data.json', 'w', encoding="utf-8") as f: #json 파일 저장
+            json.dump(result_dic, f , ensure_ascii=False, indent="\t")
+    print(trasnfer_dic)
+
 show_VI()
 inner_scroll()
 check_overlap()
